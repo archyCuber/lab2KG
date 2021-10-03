@@ -6,7 +6,9 @@ interface IMainContextProvider {
 
 const MainContext = React.createContext({
   showAngleModal: false,
+  showRotatePointModal: false,
   onChangeShowAngleModal: (action: boolean) => {},
+  onChangeShowRotatePointModal: (action: boolean) => {},
 });
 
 export const useMainContext = () => {
@@ -15,12 +17,16 @@ export const useMainContext = () => {
 
 export const MainContextProvider = ({ children }: IMainContextProvider) => {
   const [showAngleModal, setShowAngleModal] = useState(false);
+  const [showRotatePointModal, setShowRotatePointModal] = useState(false);
 
   return (
     <MainContext.Provider
       value={{
         showAngleModal,
+        showRotatePointModal,
         onChangeShowAngleModal: (action) => setShowAngleModal(action),
+        onChangeShowRotatePointModal: (action) =>
+          setShowRotatePointModal(action),
       }}
     >
       {children}
