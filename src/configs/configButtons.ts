@@ -50,8 +50,18 @@ const buttonsReflection = [
   },
 ];
 
+const buttonsRestore = [
+  {
+    title: "Restore",
+    handleClick: () => {
+      helper.restore();
+    },
+  },
+];
+
 const useButtonsRotate = () => {
-  const { onChangeShowAngleModal } = useMainContext();
+  const { onChangeShowAngleModal, onChangeShowRotatePointModal } =
+    useMainContext();
 
   return [
     {
@@ -60,10 +70,21 @@ const useButtonsRotate = () => {
         onChangeShowAngleModal(true);
       },
     },
+    {
+      title: "Rotate with Point",
+      handleClick: () => {
+        onChangeShowRotatePointModal(true);
+      },
+    },
   ];
 };
 
 export const useButtonsConfig = () => {
   const buttonsRotate = useButtonsRotate();
-  return [...buttonsMove, ...buttonsReflection, ...buttonsRotate];
+  return [
+    ...buttonsMove,
+    ...buttonsReflection,
+    ...buttonsRotate,
+    ...buttonsRestore,
+  ];
 };

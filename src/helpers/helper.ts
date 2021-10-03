@@ -2,6 +2,7 @@ import React from "react";
 import { getFigureCoordinates } from "../store/store";
 import { helperTransformation } from "./helperTransformation";
 import { ReflectionType } from "./configs/reflectionType";
+import { ZoomType } from "../components/Zoom/ZoomPanel";
 
 class helper extends helperTransformation {
   private coordinates: any = {};
@@ -45,7 +46,6 @@ class helper extends helperTransformation {
     mainWidth: number,
     mainHeight: number
   ) => {
-    debugger;
     const coordinates = getFigureCoordinates(mainWidth, mainHeight);
     this.coordinates = coordinates;
     this.width = mainWidth;
@@ -78,6 +78,37 @@ class helper extends helperTransformation {
   public reflectionMove = (type: ReflectionType) => {
     this.reflection(this.coordinates, type, this.width, this.height);
     this.drawAfterTransform();
+  };
+
+  public rotateFigure = (angle: number) => {
+    this.rotate(this.coordinates, this.width, this.height, angle);
+    this.drawAfterTransform();
+  };
+
+  public rotateFigureWithPoint = (
+    angle: number,
+    point: { x: string; y: string }
+  ) => {
+    this.rotateWithPoint(
+      this.coordinates,
+      this.width,
+      this.height,
+      point,
+      angle
+    );
+    this.drawAfterTransform();
+  };
+
+  public zoomFigure = (type: ZoomType, isZoomUp: boolean) => {
+    this.zoom(this.coordinates, this.width, this.height, type, isZoomUp);
+    this.drawAfterTransform();
+  };
+
+  public restore = () => {
+    this.coordinates = getFigureCoordinates(this.width, this.height);
+    this.ctx.clearRect(0, 0, this.width, this.height);
+    this.drawField();
+    this.drawFigure();
   };
 }
 

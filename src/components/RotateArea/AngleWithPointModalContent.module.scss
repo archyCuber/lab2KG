@@ -1,0 +1,17 @@
+.root {
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.pointArea {
+  margin-bottom: 8px;
+
+  span {
+    font-size: 30px;
+    margin: 4px;
+  }
+}
