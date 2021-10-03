@@ -1,65 +1,67 @@
-export class helperTransformation {
-  private getMoveMatrix = (x: number, y: number) => {
-    return [
-      [[1], [0], [x]],
-      [[0], [1], [y]],
-      [[0], [0], [1]],
-    ];
+import { ReflectionType } from "./configs/reflectionType";
+import { helperTransformMatrix } from "./helperTransformMatrix";
+
+export class helperTransformation extends helperTransformMatrix {
+  constructor() {
+    super();
+  }
+
+  private changeCoordinatesWithoutCenter = (
+    coordinates: any,
+    transformMatrix: any
+  ) => {
+    Object.keys(coordinates).forEach((key) => {
+      Object.keys(coordinates[key]).forEach((keyPoint) => {
+        coordinates[key][keyPoint] = this.multiplyMatrix(
+          transformMatrix,
+          coordinates[key][keyPoint]
+        );
+      });
+    });
   };
 
-  private multiplyMatrix = (A: any, B: any) => {
-    const rowsA = A.length,
-      colsA = A[0].length,
-      rowsB = B.length,
-      colsB = B[0] && B[0].length ? B[0].length : 1;
-    let C: any = [];
-
-    if (colsA !== rowsB) return false;
-
-    for (let i = 0; i < rowsA; i++) C[i] = [];
-    if (colsB === 1) {
-      for (let k = 0; k < colsB; k++) {
-        for (let i = 0; i < rowsA; i++) {
-          let temp = 0;
-          for (let j = 0; j < rowsB; j++) temp += A[i][j] * B[j];
-          C[i] = temp;
-        }
-      }
-    } else {
-      for (let i = 0; i < rowsA; i++) C[i] = [];
-      for (let k = 0; k < colsB; k++) {
-        for (let i = 0; i < rowsA; i++) {
-          let t = 0;
-          for (let j = 0; j < rowsB; j++) t += A[i][j] * B[j][k];
-          C[i][k] = t;
-        }
-      }
-    }
-
-    return C;
+  private changeCoordinatesWithCenter = (
+    coordinates: any,
+    transformMatrix: any,
+    width: number,
+    height: number
+  ) => {
+    Object.keys(coordinates).forEach((key) => {
+      Object.keys(coordinates[key]).forEach((keyPoint) => {
+        coordinates[key][keyPoint][0] -= width / 2;
+        coordinates[key][keyPoint][1] -= height / 2;
+        coordinates[key][keyPoint] = this.multiplyMatrix(
+          transformMatrix,
+          coordinates[key][keyPoint]
+        );
+        coordinates[key][keyPoint][0] += width / 2;
+        coordinates[key][keyPoint][1] += height / 2;
+      });
+    });
   };
 
   protected moveY = (coordinates: any, type: "up" | "down") => {
     const transformMatrix = this.getMoveMatrix(0, type === "up" ? -10 : 10);
-    Object.keys(coordinates).forEach((key) => {
-      Object.keys(coordinates[key]).forEach((keyPoint) => {
-        coordinates[key][keyPoint] = this.multiplyMatrix(
-          transformMatrix,
-          coordinates[key][keyPoint]
-        );
-      });
-    });
+    this.changeCoordinatesWithoutCenter(coordinates, transformMatrix);
   };
 
   protected moveX = (coordinates: any, type: "left" | "right") => {
     const transformMatrix = this.getMoveMatrix(type === "left" ? -10 : 10, 0);
-    Object.keys(coordinates).forEach((key) => {
-      Object.keys(coordinates[key]).forEach((keyPoint) => {
-        coordinates[key][keyPoint] = this.multiplyMatrix(
-          transformMatrix,
-          coordinates[key][keyPoint]
-        );
-      });
-    });
+    this.changeCoordinatesWithoutCenter(coordinates, transformMatrix);
+  };
+
+  protected reflection = (
+    coordinates: any,
+    type: ReflectionType,
+    width: number,
+    height: number
+  ) => {
+    const transformMatrix = this.getReflectionMatrix(type);
+    this.changeCoordinatesWithCenter(
+      coordinates,
+      transformMatrix,
+      width,
+      height
+    );
   };
 }

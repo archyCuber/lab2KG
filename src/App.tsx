@@ -1,13 +1,16 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import { Button } from '@material-ui/core';
-import {Main} from "./components/Main/Main";
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import { Button } from "@material-ui/core";
+import { Main } from "./components/Main/Main";
+import { MainContextProvider } from "./components/Main/MainContext";
 
 function App() {
   return (
     <div>
-        <Main/>
+      <MainContextProvider>
+        <Main />
+      </MainContextProvider>
     </div>
   );
 }
