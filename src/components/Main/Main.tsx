@@ -1,40 +1,23 @@
-import React, { useEffect, useRef } from "react";
-import helper from "../../helpers/helper";
-import { ActionPanel } from "../ActionPanel/ActionPanel";
+import React, { useRef } from "react";
+import { ButtonPanel } from "../../core/ButtonPanel/ButtonPanel";
+import { useButtonsConfig } from "../../configs/configButtons";
+import { useMoveSubscribe } from "./hooks/useMoveSubscribe";
+import { useInit } from "./hooks/useInit";
+import { RotateArea } from "../RotateArea/RotateArea";
 const MAIN_WIDTH = document.body.clientWidth;
 const MAIN_HEIGHT = document.body.clientHeight - 60;
 
 export const Main = () => {
   const canvasMain = useRef({} as HTMLCanvasElement);
-
-  useEffect(() => {
-    helper.init(canvasMain, MAIN_WIDTH, MAIN_HEIGHT);
-  }, []);
-
-  useEffect(() => {
-    document.addEventListener("keydown", (e: any) => {
-      console.log(e);
-      switch (e.key) {
-        case "ArrowUp":
-          helper.movePositionY("up");
-          break;
-        case "ArrowDown":
-          helper.movePositionY("down");
-          break;
-        case "ArrowRight":
-          helper.movePositionX("right");
-          break;
-        case "ArrowLeft":
-          helper.movePositionX("left");
-          break;
-      }
-    });
-  }, []);
+  const buttons = useButtonsConfig();
+  useMoveSubscribe();
+  useInit(canvasMain, MAIN_WIDTH, MAIN_HEIGHT);
 
   return (
     <div>
       <canvas ref={canvasMain}></canvas>
-      <ActionPanel />
+      <ButtonPanel buttonsConfig={buttons} />
+      <RotateArea />
     </div>
   );
 };
